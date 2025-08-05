@@ -9,11 +9,10 @@ def plot_top_n_by_year(df, year, chart_type, top_n):
     
     if column_name not in df.columns:
         st.warning(f"{column_name} not found in dataset.")
-        return pd.DataFrame()  # Return empty df for download fallback
+        return pd.DataFrame() 
 
     top_df = df.nlargest(top_n, column_name).copy()
 
-    # Tooltip data
     hover_data = {
         column_name: True,
         "World Population Percentage": True
@@ -31,32 +30,29 @@ def plot_top_n_by_year(df, year, chart_type, top_n):
         fig.update_layout(xaxis_tickangle=-45)
 
 
-    else:  # Pie/Donut chart
+    else:  
         fig = px.pie(
             top_df,
             values=column_name,
             names="Country/Territory",
             title=f"Top {top_n} Countries by Population in {year}",
-            hole=0.3,  # Donut style
+            hole=0.3,  
             hover_data=hover_data,
         )
         fig.update_traces(textposition='inside', textinfo='percent+label')
 
     st.plotly_chart(fig, use_container_width=True)
 
-    return top_df  # Return for download
+    return top_df  
 
 
-
-# Load data
 @st.cache_data
 def load_data():
-    df = pd.read_csv("world_population.csv")  # replace with your actual filename
+    df = pd.read_csv("world_population.csv")  
     return df
 
 df = load_data()
 
-# App title
 st.set_page_config(page_title="World Population Dashboard", layout="wide")
 st.title("🌍 World Population Insights Dashboard")
 st.markdown("""
@@ -74,46 +70,39 @@ st.sidebar.markdown("Use the main page to explore visualizations.")
 tab1, tab2, tab3 = st.tabs(["🌐 World Map", "📅 Top 20 by Year", "📈 Metric Rankings"])
 
 with tab1:
-    # Preview Data
     st.subheader("Dataset Preview")
     st.dataframe(df.head())
 
-
     st.subheader("🌐 Interactive World Map - 2022 Population")
 
-    # Create Choropleth Map
     fig = px.choropleth(
         df,
-        locations="CCA3",           # ISO Alpha-3 country codes
-        color="2022 Population",         # What to color by
-        hover_name="Country/Territory",            # Tooltip name
+        locations="CCA3",           
+        color="2022 Population",         
+        hover_name="Country/Territory",           
         hover_data={
             "Capital": True,
             "Area (km²)": True,
             "2022 Population": True,
-            "CCA3": False           # Hide ISO code from tooltip
+            "CCA3": False           
         },
-        color_continuous_scale="Viridis",  # You can try 'Plasma', 'Blues', etc.
+        color_continuous_scale="Viridis",  
         projection="natural earth",
         title="World Population by Country (2022)"
     )
 
-    # Display map
     st.plotly_chart(fig, use_container_width=True)
 
 
 with tab2:
     st.subheader("📊 Top N Countries by Population")
 
-    # Inputs for interactivity
     selected_year = st.selectbox("Select Year", [2022, 2020, 2015, 2010, 2000, 1990, 1980, 1970])
     chart_type = st.radio("Select Chart Type", ["Bar Chart", "Pie Chart"], horizontal=True)
-    top_n = st.slider("Select Top N Countries", min_value=5, max_value=50, step=50, value=10)
+    top_n = st.slider("Select Top N Countries", min_value=5, max_value=50, step=5, value=10)
 
-    # Plot based on user inputs
     filtered_df = plot_top_n_by_year(df, selected_year, chart_type, top_n)
 
-    # Download option
     csv = filtered_df.to_csv(index=False).encode('utf-8')
     st.download_button(
         label="⬇️ Download Top Countries as CSV",
@@ -141,7 +130,6 @@ with tab3:
 
     selected_metric_label = selected_metric
 
-    # Apply quantile range only for specific metrics
     if selected_metric in ["Density (per km²)", "Growth Rate"]:
         low = df[selected_metric].quantile(0.05)
         high = df[selected_metric].quantile(0.95)
@@ -164,17 +152,8 @@ with tab3:
     fig.update_layout(margin=dict(l=0, r=0, t=40, b=0))
     st.plotly_chart(fig, use_container_width=True)
 
-
-
-image = Image.open("logo.jpg")  # put your logo in the same folder
+image = Image.open("logo.jpg")  
 st.sidebar.image(image, caption='By Ahmad Tanveer', use_container_width=True)
 
 st.markdown("---")
 st.markdown("Made with ❤️ by **Ahmad Tanveer** | Powered by Streamlit & Plotly")
-
-
-
-
-
-
-
