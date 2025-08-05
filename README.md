@@ -28,7 +28,7 @@ An interactive and visually engaging dashboard built using **Streamlit** and **P
 
 1. **Clone the repo**:
  
-   git clone https://github.com/your-username/World-Population-Dashboard.git
+   git clone https://github.com/CodxAhmad/World-Population-Dashboard.git
    cd World-Population-Dashboard
 
 2. **✅ Install dependencies**:
