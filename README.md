@@ -27,6 +27,14 @@ An interactive and visually engaging dashboard built using **Streamlit** and **P
 ## 🚀 How to Run
 
 1. **Clone the repo**:
-   ```bash
+ 
    git clone https://github.com/your-username/World-Population-Dashboard.git
    cd World-Population-Dashboard
+
+2. **✅ Install dependencies**:
+  pip install -r requirements.txt
+
+3. **▶️ Run the app**:
+
+  streamlit run app.py
+
